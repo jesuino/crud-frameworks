@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd" version="6">
+  <description>An EAR module for all the server modules</description>
+  <display-name>crud-frameworks-ear</display-name>
+  <module>
+    <web>
+      <web-uri>crud-frameworks-rest.war</web-uri>
+      <context-root>crud-frameworks-rest</context-root>
+    </web>
+  </module>
+  <module>
+    <ejb>crud-frameworks-core-1.0.jar</ejb>
+  </module>
+</application>
