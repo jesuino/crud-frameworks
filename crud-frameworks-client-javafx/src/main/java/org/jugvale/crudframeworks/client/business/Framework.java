@@ -78,6 +78,5 @@ public class Framework {
 
 	public void setPlatform(String platform) {
 		this.platform = platform;
-	}
-	
+	}	
 }

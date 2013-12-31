@@ -3,7 +3,6 @@ package org.jugvale.crudframeworks.service;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -16,7 +15,6 @@ import org.jugvale.crudframeworks.model.Framework;
  * 
  */
 @Stateless
-@Default
 public class FrameworkService {
 
 	@Inject

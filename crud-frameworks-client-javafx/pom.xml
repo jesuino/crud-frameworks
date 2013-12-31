@@ -24,15 +24,6 @@
 			<systemPath>/opt/java/jdk1.7.0_13/jre/lib/jfxrt.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.aircraft</groupId>
-			<artifactId>Afterbruner.fx</artifactId>
-			<version>1.0</version>
-			<systemPath>/home/william/projetos/afterburner.fx/target/afterburner.jar</systemPath>
-			<scope>system</scope>
-
-		</dependency>
-
 		<!--RESTEasy -->
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
@@ -56,6 +47,4 @@
 			<version>1.9.12</version>
 		</dependency>
 	</dependencies>
-
-
 </project>

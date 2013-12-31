@@ -87,5 +87,4 @@ public class Framework {
 	public void setHomePage(String homePage) {
 		this.homePage = homePage;
 	}
-
 }

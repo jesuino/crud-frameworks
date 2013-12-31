@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>crud-frameworks-server</artifactId>
+		<groupId>org.jugvale.crudframeworks</groupId>
+		<version>1.0</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>crud-frameworks-ear</artifactId>
+	<packaging>ear</packaging>
+	
+	<name>CRUD Frameworks EAR</name>
+	<description>An EAR module for all the server modules</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jugvale.crudframeworks</groupId>
+			<artifactId>crud-frameworks-core</artifactId>
+			<type>ejb</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jugvale.crudframeworks</groupId>
+			<artifactId>crud-frameworks-rest</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<finalName>crud-frameworks-ear</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<version>6</version>
+					<modules>
+						<webModule>
+							<groupId>org.jugvale.crudframeworks</groupId>
+							<artifactId>crud-frameworks-rest</artifactId>
+							<bundleFileName>crud-frameworks-rest.war</bundleFileName>
+							<contextRoot>crud-frameworks-rest</contextRoot>
+						</webModule>
+					</modules>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

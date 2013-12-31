@@ -1,8 +1,9 @@
 package org.jugvale.crudframeworks.client.controller;
 
+import java.io.FileInputStream;
 import java.util.List;
+import java.util.Properties;
 
-import javax.annotation.PostConstruct;
 import javax.management.RuntimeErrorException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -23,14 +24,24 @@ import org.jugvale.crudframeworks.client.business.Framework;
  * 
  */
 public class FrameworkClientService {
+	
+	
 	// TODO: Make this configurable
-	private final String BASE_URI = "http://localhost:8080/crud-frameworks-rest/rs/frameworks/";
+	private final String BASE_URI;
 
 	ClientRequest clientRequestWithId;
 	ClientRequest clientRequest;
 
-	@PostConstruct
-	public void init() {
+	public  FrameworkClientService() {
+		Properties p = new Properties();
+		try {
+			p.load(new FileInputStream(getClass().getResource(
+					"/conf/crudframeworks.properties").getFile()));
+		} catch (Exception e) {			
+			e.printStackTrace();
+			System.err.println("ERROR LOADING crudframeworks.properties file");
+		}
+		BASE_URI = p.getProperty("host");
 		clientRequestWithId = new ClientRequest(BASE_URI + "{id}");
 		clientRequest = new ClientRequest(BASE_URI);
 	}
@@ -70,7 +81,8 @@ public class FrameworkClientService {
 		ClientResponse<?> r = null;
 		Object serverResponseBody = null;
 		try {
-			r = cr.httpMethod(httpMethod);
+			System.out.println("Request to URL: " + cr.getUri());
+			r = cr.httpMethod(httpMethod);			
 			if (r.getStatus() >= Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
 				handleError("Server is having a bad time with this request, try again later...");
 			} else if (r.getStatus() == Status.NOT_FOUND.getStatusCode()) {

@@ -23,7 +23,6 @@ public class FrameworksRESTClientTest {
 	public void init() {
 		System.out.println("Initiating tests...");
 		client = new FrameworkClientService();
-		client.init();
 	}
 
 	@Test

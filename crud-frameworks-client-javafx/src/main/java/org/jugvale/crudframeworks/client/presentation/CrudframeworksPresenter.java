@@ -27,8 +27,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
-import javax.inject.Inject;
-
 import org.jugvale.crudframeworks.client.business.Framework;
 import org.jugvale.crudframeworks.client.controller.FrameworkClientService;
 
@@ -42,7 +40,6 @@ public class CrudframeworksPresenter implements Initializable {
 
 	public static SimpleDateFormat dataFormatter = new SimpleDateFormat(
 			"MM/dd/yyyy");
-	@Inject
 	FrameworkClientService client;
 
 	@FXML
@@ -113,7 +110,6 @@ public class CrudframeworksPresenter implements Initializable {
 			Framework f = tblFrameworks.getSelectionModel().getSelectedItem();
 			if (f != null) {
 				if (setFrameworkFieldsAndValidate(f)) {
-					System.out.println(f.getName());
 					client.update(f);
 					refreshData();
 					status("Framework with ID '" + f.getId() + "' modified.");
@@ -125,6 +121,10 @@ public class CrudframeworksPresenter implements Initializable {
 			}
 		}
 	};
+
+	public CrudframeworksPresenter() {
+		client = new FrameworkClientService();
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -240,14 +240,14 @@ public class CrudframeworksPresenter implements Initializable {
 	private void setFrameworkFields(Framework f) {
 		// the concatenations are to avoid null when getting the value..
 		txtCreator.setText(f.getCreator() + "");
-		txtCurrentVersion.setText(String.valueOf(f.getCurrentVersion()) + "");
+		txtCurrentVersion.setText(String.valueOf(f.getCurrentVersion()));
 		txtDescription.setText(f.getDescription() + "");
 		txtHomePage.setText(f.getHomePage() + "");
 		txtName.setText(f.getName() + "");
 		txtPlatform.setText(f.getPlatform() + "");
 		Date date = f.getLastReleaseDate();
 		if (date != null)
-			txtReleaseDate.setText(dataFormatter.format(date) + "");
+			txtReleaseDate.setText(dataFormatter.format(date));
 	}
 
 	private void clearFields() {
@@ -258,10 +258,9 @@ public class CrudframeworksPresenter implements Initializable {
 		txtName.setText("");
 		txtPlatform.setText("");
 		txtReleaseDate.setText("");
-
 	}
 
-	// TODO Ok, *THIS* is HORRIBLE, need to change! Perhaps Bean Validation?
+	// TODO Change to a better validation
 	private boolean setFrameworkFieldsAndValidate(Framework f) {
 		if (f == null) {
 			f = new Framework();
