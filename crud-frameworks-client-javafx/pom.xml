@@ -8,6 +8,8 @@
 	<properties>
 		<resteasy.version>2.3.5.Final</resteasy.version>
 		<junit-version>4.8.2</junit-version>
+		 <maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<!-- JUnit -->
