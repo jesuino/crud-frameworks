@@ -31,8 +31,6 @@ import org.jugvale.crudframeworks.client.business.Framework;
 import org.jugvale.crudframeworks.client.controller.FrameworkClientService;
 
 /**
- * TODO: Organize methods names and clean up the code, IT'S A MESS! SOLVE THE
- * MODIFY ISSUE SOLVE THE ISSUE WITH FORMATTED DATA
  * 
  * @author william
  */
@@ -153,7 +151,6 @@ public class CrudframeworksPresenter implements Initializable {
 		refreshData();
 		List<Framework> data = tblFrameworks.getItems();
 		List<Framework> filteredList = new ArrayList<>();
-		// we could use lambda, but my eclipse still doesn't support it =/
 		for (Framework framework : data) {
 			if (rbPlatform.isSelected()) {
 				String platform = framework.getPlatform();
@@ -177,7 +174,6 @@ public class CrudframeworksPresenter implements Initializable {
 
 	public void modifyFrameworkAction() {
 		showFrameworkPane(Mode.UPDATE);
-
 	}
 
 	public void addFrameworkAction() {

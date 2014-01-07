@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import javax.management.RuntimeErrorException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -24,54 +24,43 @@ import org.jugvale.crudframeworks.client.business.Framework;
  * 
  */
 public class FrameworkClientService {
-	
-	
-	// TODO: Make this configurable
+
 	private final String BASE_URI;
 
-	ClientRequest clientRequestWithId;
-	ClientRequest clientRequest;
-
-	public  FrameworkClientService() {
+	public FrameworkClientService() {
 		Properties p = new Properties();
 		try {
 			p.load(new FileInputStream(getClass().getResource(
 					"/conf/crudframeworks.properties").getFile()));
-		} catch (Exception e) {			
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println("ERROR LOADING crudframeworks.properties file");
 		}
 		BASE_URI = p.getProperty("host");
-		clientRequestWithId = new ClientRequest(BASE_URI + "{id}");
-		clientRequest = new ClientRequest(BASE_URI);
 	}
 
 	public void add(Framework framework) {
-		clientRequest.body(MediaType.APPLICATION_JSON, framework);
-		doRequest(clientRequest, HttpPost.METHOD_NAME, null);
+		doRequest(createRequest().body(MediaType.APPLICATION_JSON, framework), HttpPost.METHOD_NAME, null);
 	}
 
 	public Framework get(int id) {
-		clientRequestWithId.pathParameter("id", id);
-		return (Framework) doRequest(clientRequestWithId, HttpGet.METHOD_NAME,
+		return (Framework) doRequest(createRequest(id), HttpGet.METHOD_NAME,
 				new GenericType<Framework>() {
 				});
 	}
 
 	public void remove(int id) {
-		clientRequestWithId.pathParameter("id", id);
-		doRequest(clientRequestWithId, HttpDelete.METHOD_NAME, null);
+		doRequest(createRequest(id), HttpDelete.METHOD_NAME, null);
 	}
 
 	public void update(Framework framework) {
-		clientRequestWithId.pathParameter("id", framework.getId()).body(
-				MediaType.APPLICATION_JSON, framework);
-		doRequest(clientRequestWithId, HttpPut.METHOD_NAME, null);
+		doRequest(createRequest(framework.getId()).body(
+				MediaType.APPLICATION_JSON, framework), HttpPut.METHOD_NAME, null);
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Framework> getAll() {
-		return (List<Framework>) doRequest(clientRequest, HttpGet.METHOD_NAME,
+		return (List<Framework>) doRequest(createRequest(), HttpGet.METHOD_NAME,
 				new GenericType<List<Framework>>() {
 				});
 	}
@@ -81,13 +70,18 @@ public class FrameworkClientService {
 		ClientResponse<?> r = null;
 		Object serverResponseBody = null;
 		try {
-			System.out.println("Request to URL: " + cr.getUri());
-			r = cr.httpMethod(httpMethod);			
-			if (r.getStatus() >= Status.INTERNAL_SERVER_ERROR.getStatusCode()) {
+			System.out.println("PERFORM A "+ httpMethod + " ON " + cr.getUri());
+			r = cr.httpMethod(httpMethod);
+			// ??
+			int status = r.getStatus();
+			if ( status >= 500) {
 				handleError("Server is having a bad time with this request, try again later...");
-			} else if (r.getStatus() == Status.NOT_FOUND.getStatusCode()) {
+			} else if (status == 404) {
 				handleError("Framework with ID "
 						+ cr.getPathParameters().get("id") + " not found.");
+				// if it's not a success code
+			}else if (r.getStatus() >= 300){
+				handleError("The server responded with an unexpected status: "+ r.getStatus());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,8 +90,14 @@ public class FrameworkClientService {
 		if (returnType != null)
 			serverResponseBody = r.getEntity(returnType);
 		cr.clear();
-		r.releaseConnection();
 		return serverResponseBody;
+	}
+
+	private ClientRequest createRequest(int id) {
+		return new ClientRequest(UriBuilder.fromPath(BASE_URI).path(String.valueOf(id)).build().toString());
+	}
+	private ClientRequest createRequest() {
+			return new ClientRequest(BASE_URI);
 	}
 
 	private void handleError(String message) {
